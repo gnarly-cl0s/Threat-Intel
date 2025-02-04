@@ -1,0 +1,1718 @@
+{
+  "v": "1",
+  "id": "592979dc-61dc-4df8-b716-7fb89e2b65af",
+  "rev": 2,
+  "name": "Threat Intel Log Parsing Setup",
+  "summary": "PFSense Firewall and Suricata Log Parsing",
+  "description": "Home lab project to help quickly setup rules and pipelines for message parsing and enrichment where possible. ",
+  "vendor": "Carlos Marquez ",
+  "url": "https://github.com/gnarly-cl0s/Threat-Intel",
+  "parameters": [],
+  "entities": [
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "2b229fe2-eb8f-4375-aea6-172e213dfaef",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "city-lookup"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "City lookup"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "City check"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "maxmind_geoip"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/etc/graylog/server/GeoLite2-City.mmdb"
+          },
+          "database_type": {
+            "@type": "string",
+            "@value": "MAXMIND_CITY"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 1
+          },
+          "check_interval_unit": {
+            "@type": "string",
+            "@value": "MINUTES"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "c751cc7c-0380-4565-8edd-7b70bc4ffdc9",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "service-ports"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Service Ports"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Port number to service name mappings"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "csvfile"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/etc/graylog/server/service-names-port-numbers.csv"
+          },
+          "separator": {
+            "@type": "string",
+            "@value": ","
+          },
+          "quotechar": {
+            "@type": "string",
+            "@value": "\""
+          },
+          "key_column": {
+            "@type": "string",
+            "@value": "Port"
+          },
+          "value_column": {
+            "@type": "string",
+            "@value": "Service"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 60
+          },
+          "case_insensitive_lookup": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "2517bfc3-2c92-4fd4-927b-dec6f4a32b7c",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "country-lookup"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Country lookup"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "County check"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "maxmind_geoip"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/etc/graylog/server/GeoLite2-Country.mmdb"
+          },
+          "database_type": {
+            "@type": "string",
+            "@value": "MAXMIND_COUNTRY"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 1
+          },
+          "check_interval_unit": {
+            "@type": "string",
+            "@value": "MINUTES"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_adapter",
+        "version": "1"
+      },
+      "id": "d249b51d-c06e-434b-8816-c875fdb2a680",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "asn-lookup"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "ASN lookup"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "ASN check"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "maxmind_geoip"
+          },
+          "path": {
+            "@type": "string",
+            "@value": "/etc/graylog/server/GeoLite2-ASN.mmdb"
+          },
+          "database_type": {
+            "@type": "string",
+            "@value": "MAXMIND_ASN"
+          },
+          "check_interval": {
+            "@type": "long",
+            "@value": 1
+          },
+          "check_interval_unit": {
+            "@type": "string",
+            "@value": "MINUTES"
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "7a2c32e8-24fa-4047-bc92-9e162a5b98b2",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "asn-lookup"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "ASN lookup cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "ASN check"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 120
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 0
+          },
+          "ignore_null": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "ca6924a9-c40b-4cb2-b34c-cdb5a55959ae",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "city-lookup-cache"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "City lookup cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "City check"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 60
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 0
+          },
+          "ignore_null": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "789bdf98-5169-4419-8df2-6c79d90b9983",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "country-lookup"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Country lookup cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "County check"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 120
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 0
+          },
+          "ignore_null": {
+            "@type": "boolean",
+            "@value": false
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_cache",
+        "version": "1"
+      },
+      "id": "3f26c148-3882-4ad0-84bb-cd9ebd6ccf53",
+      "data": {
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "port-to-service-cache"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Port to Service Cache"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Cache of the CSV file"
+        },
+        "configuration": {
+          "type": {
+            "@type": "string",
+            "@value": "guava_cache"
+          },
+          "max_size": {
+            "@type": "integer",
+            "@value": 1000
+          },
+          "expire_after_access": {
+            "@type": "long",
+            "@value": 120
+          },
+          "expire_after_access_unit": {
+            "@type": "string",
+            "@value": "SECONDS"
+          },
+          "expire_after_write": {
+            "@type": "long",
+            "@value": 0
+          }
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "221fbed6-3595-4bf2-9b24-59ca56b13689",
+      "data": {
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "7a2c32e8-24fa-4047-bc92-9e162a5b98b2"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "asn-data"
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "d249b51d-c06e-434b-8816-c875fdb2a680"
+        },
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "ASN data"
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "description": {
+          "@type": "string",
+          "@value": "ASN check"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "9f5b870e-7c3b-44dc-a20a-aeb4837b1769",
+      "data": {
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "ca6924a9-c40b-4cb2-b34c-cdb5a55959ae"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "city-lookup"
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "2b229fe2-eb8f-4375-aea6-172e213dfaef"
+        },
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "City data"
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "description": {
+          "@type": "string",
+          "@value": "City check"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "3892b1cb-380e-4e00-9180-89dee77f9ead",
+      "data": {
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "3f26c148-3882-4ad0-84bb-cd9ebd6ccf53"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "port-to-service-lookup"
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "c751cc7c-0380-4565-8edd-7b70bc4ffdc9"
+        },
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Port to Service Lookup"
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Port number to Service Name Lookup"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "lookup_table",
+        "version": "1"
+      },
+      "id": "f3c84ac4-194d-43c5-ade8-4bd8c4498952",
+      "data": {
+        "default_single_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "cache_name": {
+          "@type": "string",
+          "@value": "789bdf98-5169-4419-8df2-6c79d90b9983"
+        },
+        "name": {
+          "@type": "string",
+          "@value": "country-data"
+        },
+        "default_multi_value_type": {
+          "@type": "string",
+          "@value": "NULL"
+        },
+        "default_multi_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "data_adapter_name": {
+          "@type": "string",
+          "@value": "2517bfc3-2c92-4fd4-927b-dec6f4a32b7c"
+        },
+        "_scope": {
+          "@type": "string",
+          "@value": "DEFAULT"
+        },
+        "title": {
+          "@type": "string",
+          "@value": "Country Data"
+        },
+        "default_single_value": {
+          "@type": "string",
+          "@value": ""
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Country check"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline",
+        "version": "1"
+      },
+      "id": "c3c9c4d2-f14b-46b3-86b2-f5525d8d47e2",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": " pfSense: suricata"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "IDS"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "pipeline \" pfSense: suricata\"\nstage 0 match either\nrule \"normalize_surricata\"\nstage 1 match either\nrule \"Port to Service Lookup\"\nrule \"GeoIP ASN lookup: src_ip\"\nrule \"GeoIP City lookup: src_ip\"\nend"
+        },
+        "connected_streams": [
+          {
+            "@type": "string",
+            "@value": "43f731f3-10b8-4196-b825-240394cc7f76"
+          }
+        ]
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline",
+        "version": "1"
+      },
+      "id": "04d9abbf-66cb-4fc5-8f00-192fc6ea5ee5",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: General Filterlog"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Pass and Blocked Traffic "
+        },
+        "source": {
+          "@type": "string",
+          "@value": "pipeline \"pfSense: General Filterlog\"\nstage 0 match either\nrule \"pfSense filterlog: IPv4 ICMP Echo\"\nrule \"pfSense filterlog: IPv4 ICMP Unreachable Protocol\"\nrule \"pfSense filterlog: IPv4 ICMP TStamp\"\nrule \"pfSense filterlog: IPv4 ICMP Need Frag\"\nrule \"pfSense filterlog: IPv4 ICMP Unreachable Port\"\nrule \"pfSense filterlog: IPv4 ICMP Default\"\nrule \"pfSense filterlog: IPv4 ICMP Unreachable Other\"\nrule \"pfSense filterlog: IPv4 ICMP TStamp Reply\"\nrule \"pfSense filterlog: IPv4 TCP\"\nrule \"pfSense filterlog: IPv6 TCP\"\nrule \"pfSense filterlog: IPv6 UDP\"\nrule \"pfSense filterlog: IPv4 UDP\"\nrule \"pfSense filterlog: IPv6 ICMP\"\nstage 1 match all\nrule \"Port to Service Lookup\"\nrule \"GeoIP ASN lookup: src_ip\"\nrule \"GeoIP City lookup: src_ip\"\nend"
+        },
+        "connected_streams": [
+          {
+            "@type": "string",
+            "@value": "d93721b0-8bd9-41ef-a761-00fda10b3688"
+          }
+        ]
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline",
+        "version": "1"
+      },
+      "id": "358eac97-87e1-4f7c-9445-46e02eda20e8",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense"
+        },
+        "description": {
+          "@type": "string",
+          "@value": ""
+        },
+        "source": {
+          "@type": "string",
+          "@value": "pipeline \"pfSense\"\nstage 1 match either\nrule \"pfSense: Parse Snort/Suricata Message\"\nrule \"pfSense: Parse php-fpm messages\"\nrule \"pfSense: Parse php-cgi messages\"\nstage 0 match either\nrule \"pfSense: Check Application\"\nend"
+        },
+        "connected_streams": [
+          {
+            "@type": "string",
+            "@value": "1b8e2d97-7724-42c6-8bef-7501af9d4f89"
+          }
+        ]
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "d79c0eda-77ec-4933-9737-47cb163b4173",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Unreachable Protocol"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Unreachable Protocol"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP Unreachable Protocol\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,unreachproto,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_dst_ip},%{DATA:icmp_protocol_id}\", to_string($message.message));\n    set_fields(fm);\n    set_field(\"a\",to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,(request|reply),.*$\", to_string($message.message))));\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "5478e7a4-3239-4857-9073-9bf18e326f4b",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: Check filterlog"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense: Check if Filterlog"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense: Check filterlog\"\nwhen\n    has_field(\"application_name\") AND\n    to_string($message.application_name) == \"filterlog\"\nthen\n    let m = regex_replace(\"(^filterlog: )\", to_string($message.message),\"\");\n    set_field(\"original_message\", to_string($message.message));\n    set_field(\"message\", to_string(m));\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "8fe7daec-97af-4af5-97e1-32989aa316b0",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "GeoIP City lookup: src_ip"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Look up source IP City info"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"GeoIP City lookup: src_ip\"\nwhen\n has_field(\"src_ip\")\nthen\n let geo = lookup(\"city-lookup\", to_string($message.src_ip));\n set_field(\"src_ip_geo_location\", geo[\"coordinates\"]);\n set_field(\"is_in_european_union\", geo[\"country\"].is_in_european_union);\n set_field(\"src_ip_geo_country\", geo[\"country\"].iso_code);\n set_field(\"src_ip_geo_city\", geo[\"city\"].names.en);\n set_field(\"postal_code\", geo[\"postal\"].code);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "3fc2b3d3-9142-415f-bc6e-b2b0ccc4a74e",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: Parse php-fpm messages"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense: Parse php-fpm components to set application name"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense: Parse php-fpm messages\"\nwhen\n    to_string($message.application_name) == \"php-fpm\"\nthen\n    // Regex matches for system_gateways.php/: 96049/message\n    let a = regex(\"(?<=\\\\/)(.*?)(?=:)(: [0-9]*)(.*)\", to_string($message.message));\n    set_field(\"application_name\", a[\"0\"]);\n    set_field(\"original_message\", to_string($message.message));\n    set_field(\"message\", a[\"2\"]);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "37a84887-4f3d-45e1-933d-01d32cfb55d3",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Echo"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Echo"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP Echo\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,(request|reply),.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_id},%{DATA:icmp_sequence}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "bedcc840-f9f3-4e8b-9eef-2d0f69b3c427",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: Parse Snort/Suricata Message"
+        },
+        "description": {
+          "@type": "string",
+          "@value": ""
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense: Parse Snort/Suricata Message\"\nwhen\n    to_string($message.application_name) == \"suricata\" || to_string($message.application_name) == \"snort\"\nthen\n    // Set the message\n    let sm = regex(\"(.*) \\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{\\\\S+\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(concat(to_string($message.application_name), \"_message\"), to_string(sm[\"0\"]));\n    \n    // Set the classification\n    let sm = regex(\".*\\\\[Classification:(.+)\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{\\\\S+\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(concat(to_string($message.application_name), \"_classification\"), to_string(sm[\"0\"]));\n    \n    // Set the priority\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s(\\\\d)\\\\].*\\\\{\\\\S+\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(concat(to_string($message.application_name), \"_priority\"), to_string(sm[\"0\"]));\n    \n    // Set the interface\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\]:\\\\s<(\\\\S+)>\\\\s\\\\{(\\\\S+)\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(\"interface\", to_string(sm[\"0\"]));\n    \n    // Set the protocol\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{(\\\\S+)\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(concat(to_string($message.application_name), \"_protocol\"), to_string(sm[\"0\"]));\n    \n    // Set the Source IP\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{\\\\S+\\\\}\\\\s(\\\\S+):\\\\d+\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(\"src_ip\", to_string(sm[\"0\"]));\n    \n    // Set the Source Port\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{\\\\S+\\\\}\\\\s\\\\S+:(\\\\d+)\\\\s->\\\\s\\\\S+:\\\\d+\", to_string($message.message));\n    set_field(\"src_port\", to_string(sm[\"0\"]));\n    \n    // Set the Destination IP\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{\\\\S+\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s(\\\\S+):\\\\d+\", to_string($message.message));\n    set_field(\"dst_ip\", to_string(sm[\"0\"]));\n    \n    // Set the Destination Port\n    let sm = regex(\".*\\\\[Classification:.+\\\\]\\\\s\\\\[Priority:\\\\s\\\\d\\\\].*\\\\{\\\\S+\\\\}\\\\s\\\\S+:\\\\d+\\\\s->\\\\s\\\\S+:(\\\\d+)\", to_string($message.message));\n    set_field(\"dst_port\", to_string(sm[\"0\"]));\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "31b224ba-7db0-4ea6-b21d-bf83aedae57e",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv6 ICMP"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv6 ICMP"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv6 ICMP\"\nwhen\n    to_string(regex(\"^.*,(in|out),6,.*,ICMPv6,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:protocol},%{DATA:protocol_id},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:UNWANTED}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "aacd1483-d976-41b0-a1f4-026c61ca9f71",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: Parse php-cgi messages"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Parse PHP CGI messages"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense: Parse php-cgi messages\"\nwhen\n    to_string($message.application_name) == \"php-cgi\"\nthen\n    // Regex matches for system_gateways.php/: 96049/message\n    let a = regex(\"(php-cgi)(: )(.*?)(?=:)(: )(.*)\", to_string($message.message));\n    set_field(\"application_name\", a[\"0\"]);\n    set_field(\"original_message\", to_string($message.message));\n    set_field(\"message\", a[\"4\"]);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "78ebf1a8-c687-485b-8b9f-36755ea5f7ef",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv6 TCP"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv6 TCP"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv6 TCP\"\nwhen\n    to_string(regex(\"^.*,(in|out),6,.*,TCP,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:class},%{DATA:flow_label},%{DATA:hope_limit},%{DATA:protocol},%{DATA:protocol_id},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:src_port},%{DATA:dst_port},%{DATA:data_length},%{DATA:tcp_flags},%{DATA:sequence},%{DATA:ack},%{DATA:window},%{DATA:urg},%{DATA:options}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "9ce1ad17-6d2a-42a2-8026-06b1300c821c",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: Check Application"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Check the pfSense application name into the application field"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense: Check Application\"\nwhen\n    has_field(\"application_name\")\nthen\n    // Parse out barnyard2 prefix\n    let m = regex_replace(\"(^\\\\[[0-9]:[0-9]*:[0-9]\\\\] )\", to_string($message.message),\"\");\n    // Parse our 'application: '\n    let m = regex_replace(\"(^[a-z]-*: )\", to_string(m),\"\");\n    // Parse our 'application[number]: '\n    let m = regex_replace(\"(^[a-z]*\\\\[[0-9]*\\\\]: )\", to_string(m),\"\");\n    //let application = split(\"[^:]*\", to_string($message.message),1);\n    set_field(\"original_message\", to_string($message.message));\n    set_field(\"message\", to_string(m));\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "69131cdf-789c-465d-b794-a554007ebadb",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Check from pfSense"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Set pfSense"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"Check from pfSense\"\nwhen\n    has_field(\"source\") AND ($message.source == \"pfsense.hacktivity.com\")\nthen\n    route_to_stream(\"pfSense\");\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "19c675bb-ef12-473b-8224-a967cf1cdda8",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "GeoIP ASN lookup: src_ip"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "ASN lookup"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"GeoIP ASN lookup: src_ip\"\nwhen\n has_field(\"src_ip\")\nthen\n let geo = lookup(\"asn-data\", to_string($message.src_ip));\n set_field(\"as_organization\", geo[\"as_organization\"]);\n set_field(\"asn\", geo[\"as_number\"]);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "ac501940-777f-49fe-8d6b-95fbc9d596d1",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP TStamp Reply"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP TStamp Reply"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP TStamp Reply\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,tstampreply,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_id},%{DATA:icmp_sequence},%{DATA:icmp_otime},%{DATA:icmp_rtime},%{DATA:icmp_ttime}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "7c86f2e7-fc1e-4b88-a0a4-5f2848168173",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv6 UDP"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv6 UDP"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv6 UDP\"\nwhen\n    to_string(regex(\"^.*,(in|out),6,.*,UDP,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:class},%{DATA:flow_label},%{DATA:hop_limit},%{DATA:protocol},%{DATA:protocol_id},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:src_port},%{DATA:dst_port},%{DATA:data_length}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "42bd69b9-b585-4083-acc6-bf4a9efb0e95",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Remove from Critical Alerts"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Remove from critical if not needed for alerts"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"Remove from Critical Alerts\"\nwhen\n    contains(to_string($message.message), \"phpDynDNS (sg1.stride.me.uk): No change in my IP address and/or 25 days has not passed. Not updating dynamic DNS entry.\") OR\n    contains(to_string($message.message), \"Message sent to dxjh4t50@gmail.com OK\") OR \n    contains(to_string($message.message), \"OpenVPN: One or more OpenVPN tunnel endpoints may have changed its IP. Reloading endpoints that may use\") OR\n    contains(to_string($message.message), \"FRAG TTL expired i=\") OR\n    contains(to_string($message.message), \"Gateway, none 'available' for inet6, use the first one configured.\") OR\n    contains(to_string($message.message), \"Session timed out for user 'admin' from:\") OR\n    contains(to_string($message.message), \"Beginning configuration backup to https://acb.netgate.com/save\") OR\n    contains(to_string($message.message), \"End of configuration backup to https://acb.netgate.com/save (success).\") OR\n    to_string($message.application_name) == \"suricata\"\nthen\n    set_field(\"skip_alert\", true);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "c6444fc6-074e-46c8-abc1-e4a2390b41ad",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Need Frag"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Need Frag"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP Need Frag\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,needfrag,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_dst_ip},%{DATA:imcp_mtu}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "44301493-4d52-464f-8777-1fed30dbd184",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Default"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Default"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP Default\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,(?!(request|reply|unreachproto|unreachport|unreach|timexceed|paramprob|redirect|maskreply|needfrag|tstamp|tstampreply)),.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_description}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "f526224c-6cc1-44ac-9ac8-0978ea1a7dbb",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "Port to Service Lookup"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Look Up Port Number to Service"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"Port to Service Lookup\"\nwhen\n    has_field(\"dst_port\") OR\n    has_field(\"src_port\")\nthen\n    let d = lookup(\"port-to-service-lookup\", to_string($message.dst_port));\n    set_field(\"dst_service\", to_string(d[\"value\"]));\n    \n    let s = lookup(\"port-to-service-lookup\", to_string($message.src_port));\n    set_field(\"src_service\", to_string(s[\"value\"]));\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "b009d597-21fb-447f-aae1-9a16170362b0",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP TStamp"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP TStamp"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP TStamp\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,tstamp,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:imcp_id},%{DATA:icmp_sequence}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "aad204d5-673b-4b9b-abf9-1e067a94a4df",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "normalize_surricata"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Extract surricata log values for grafana usage"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"normalize_surricata\"\nwhen\n  has_field(\"message\")\nthen\n  set_field(\"source\", \"Suricata\");\n  \n  let m = regex(\"\\\\] (.*)\\\\[Classification\", to_string($message.message));\n  set_field(\"Description\", m[\"0\"]);\n\n  let c = regex(\"\\\\[Classification: (.+?)\\\\]\", to_string($message.message));\n  set_field(\"Classification\", c[\"0\"]);\n  \n  let p = regex(\"\\\\[Priority: (\\\\d+)\\\\]\", to_string($message.message));\n  set_field(\"Priority\", p[\"0\"]);\n  \n  let protocol = regex(\"\\\\{(.*)\\\\}\", to_string($message.message));\n  set_field(\"Protocol\", protocol[\"0\"]);\n  \n  let parse_message = regex(\"(\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3})(:(\\\\d{1,5}))? -> (\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3})(:(\\\\d{1,5}))?\\\\R?\", to_string($message.message));\n  set_field(\"src_ip\", parse_message[\"0\"]);\n  set_field(\"src_port\", parse_message[\"2\"]);\n  set_field(\"dst_ip\", parse_message[\"3\"]);\n  set_field(\"dst_port\", parse_message[\"5\"]);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "f2abba6f-b420-4175-b10d-b13a926d99b7",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense: Parse filterlog message"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Filterlog"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense: Parse filterlog message\"\nwhen\n    to_string($message.application_name) == \"filterlog\"\nthen\n    let fm = grok(\"%{DATA:ruleId},%{DATA:subruleId},%{DATA:anchor},%{BASE10NUM:tracker},%{DATA:src_interface},%{DATA:object_name},%{DATA:command},%{DATA:direction},%{BASE10NUM:iptype},%{DATA:offset},%{DATA:tos},%{DATA:ecn},%{BASE10NUM:duration},%{BASE10NUM:session},%{DATA:flags},%{BASE10NUM:protnum},%{DATA:protocol},%{BASE10NUM:size},%{IPV4:src_ip},%{IPV4:dst_ip},%{BASE10NUM:tcp_flags},%{BASE10NUM:sequence},%{BASE10NUM:ack}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "5a90e081-ce65-4177-808e-ed42a3ded790",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Unreachable Port"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Unreachable Port"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP Unreachable Port\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,unreachport,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_dst_ip},%{DATA:icmp_protocol_id},%{DATA:icmp_port}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "b9725859-6a98-4c17-b3a2-5423921fa60c",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 TCP"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 TCP"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 TCP\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,tcp,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:src_port},%{DATA:dst_port},%{DATA:data_length},%{DATA:tcp_flags},%{DATA:sequence},%{DATA:ack},%{DATA:window},%{DATA:urg},%{DATA:options}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "e5d76c22-4a8b-4afd-9bdb-f4a784840a7f",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 UDP"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 UDP"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 UDP\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,udp,.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:src_port},%{DATA:dst_port},%{DATA:data_length}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "pipeline_rule",
+        "version": "1"
+      },
+      "id": "33634c44-f051-49a4-9440-a3d011b9e0f6",
+      "data": {
+        "title": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Unreachable Other"
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense filterlog: IPv4 ICMP Unreachable Other"
+        },
+        "source": {
+          "@type": "string",
+          "@value": "rule \"pfSense filterlog: IPv4 ICMP Unreachable Other\"\nwhen\n    to_string(regex(\"^.*,(in|out),4,.*,icmp,.*,(unreach|timexceed|paramprob|redirect|maskreply),.*$\", to_string($message.message))) != \"{}\"\nthen\n    \n    let fm = grok(\"%{BASE10NUM:rule_number},%{DATA:subrule_number},%{DATA:anchor},%{DATA:tracker},%{DATA:interface},%{DATA:reason},%{DATA:action},%{DATA:direction},%{DATA:ip_version},%{DATA:tos},%{DATA:ecn},%{DATA:ttl},%{DATA:id},%{DATA:offset},%{DATA:flags},%{DATA:protocol_id},%{DATA:protocol},%{DATA:length},%{DATA:src_ip},%{DATA:dst_ip},%{DATA:icmp_type},%{DATA:icmp_description}\", to_string($message.message));\n    set_fields(fm);\nend"
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "43f731f3-10b8-4196-b825-240394cc7f76",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": true
+        },
+        "title": {
+          "@type": "string",
+          "@value": "pfSense / Suricata"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "source"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "pfSense"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Suricata Messages"
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "d93721b0-8bd9-41ef-a761-00fda10b3688",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": true
+        },
+        "title": {
+          "@type": "string",
+          "@value": "pfSense / filterlog"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "application_name"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "filterlog"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "Filterlog messages"
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    },
+    {
+      "v": "1",
+      "type": {
+        "name": "stream",
+        "version": "1"
+      },
+      "id": "1b8e2d97-7724-42c6-8bef-7501af9d4f89",
+      "data": {
+        "alarm_callbacks": [],
+        "outputs": [],
+        "remove_matches": {
+          "@type": "boolean",
+          "@value": true
+        },
+        "title": {
+          "@type": "string",
+          "@value": "pfSense"
+        },
+        "stream_rules": [
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "source"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "pfsense.hacktivity.com"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": false
+            },
+            "description": {
+              "@type": "string",
+              "@value": ""
+            }
+          },
+          {
+            "type": {
+              "@type": "string",
+              "@value": "EXACT"
+            },
+            "field": {
+              "@type": "string",
+              "@value": "application_name"
+            },
+            "value": {
+              "@type": "string",
+              "@value": "filterlog"
+            },
+            "inverted": {
+              "@type": "boolean",
+              "@value": true
+            },
+            "description": {
+              "@type": "string",
+              "@value": "Ignore Filterlog messages"
+            }
+          }
+        ],
+        "alert_conditions": [],
+        "matching_type": {
+          "@type": "string",
+          "@value": "AND"
+        },
+        "disabled": {
+          "@type": "boolean",
+          "@value": false
+        },
+        "description": {
+          "@type": "string",
+          "@value": "pfSense syslog"
+        },
+        "default_stream": {
+          "@type": "boolean",
+          "@value": false
+        }
+      },
+      "constraints": [
+        {
+          "type": "server-version",
+          "version": ">=5.2.2+8eab621"
+        }
+      ]
+    }
+  ]
+}
